@@ -19,6 +19,8 @@ const FileUpload = () => {
     const [files, setFiles] = useState([]);
     const [uploadStatus, setUploadStatus] = useState({});
     const [activeTab, setActiveTab] = useState("upload");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [downloadStatus, setDownloadStatus] = useState("");
 
     const onDrop = (acceptedFiles) => {
         setFiles([...files, ...acceptedFiles]);
@@ -39,6 +41,37 @@ const FileUpload = () => {
             setUploadStatus((prev) => ({ ...prev, [file.name]: "error" }));
         }
     };
+
+    const handleDownload = async () => {
+        if (!searchQuery.trim()) {
+            setDownloadStatus("not_found");
+            return;
+        }
+
+        setDownloadStatus("downloading");
+
+        try {
+            const response = await axios.get(`http://localhost:8080/api/downloads`, {
+                params: { filename: searchQuery.trim() },
+                responseType: "blob",
+            });
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", searchQuery);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            setDownloadStatus("success");
+        } catch (error) {
+            console.error("Download error:", error);
+            setDownloadStatus("not_found");
+        }
+    };
+
+
 
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
@@ -83,14 +116,28 @@ const FileUpload = () => {
             {activeTab === "download" && (
                 <div className="download-container">
                     <h3 className="download-title">Download Files</h3>
-                    <p className="download-subtitle">Select files to download from the server</p>
+                    <p className="download-subtitle">Enter the filename to download from the server</p>
 
-                    <ul>
-                        <li>Hello.txt</li>
-                    </ul>
-                    {/* Download logic to be implemented soon*/}
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            className="search-input"
+                            placeholder="Enter file name (e.g., document.pdf)"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <button className="download-btn" onClick={handleDownload}>
+                            Download
+                        </button>
+                    </div>
+
+                    {downloadStatus === "not_found" && <p className="status error">File not found</p>}
+                    {downloadStatus === "downloading" && <p className="status downloading">Downloading...</p>}
+                    {downloadStatus === "success" && <p className="status success">Download complete</p>}
                 </div>
+
             )}
+
         </div>
     );
 };

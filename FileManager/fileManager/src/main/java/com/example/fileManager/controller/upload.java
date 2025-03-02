@@ -18,7 +18,8 @@ import java.util.Base64;
 @CrossOrigin(origins = "http://localhost:3000/")
 public class upload {
 
-    private static final String UPLOAD_DIR = "CREATE A FOLDER FOR STORING THE FILES AND PUT THE PATH HERE";
+    // NOTE !!! : UPLOAD_DIR should be the same for both the upload and download endpoint.
+    private static final String UPLOAD_DIR = ""; // PLEASE ADD THE DIRECTORY OF YOUR CHOICE
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
@@ -39,8 +40,8 @@ public class upload {
                 fos.write(encryptedData);
             }
 
-            String encodedKey = Base64.getEncoder().encodeToString(aesKey);
-            //saveKeyToDB(file.getOriginalFilename() + ".enc",encodedKey);
+            String encodedKey = Base64.getEncoder().encodeToString(aesKey).trim();
+
 
             DBHelper dbHelper = new DBHelper();
             dbHelper.saveKeyToDatabase(file.getOriginalFilename(),encodedKey);
