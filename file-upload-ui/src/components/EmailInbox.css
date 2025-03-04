@@ -1,0 +1,26 @@
+.email-container {
+    background: #1e1e1e;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 600px;
+    margin: auto;
+    color: white;
+}
+
+.refresh-btn {
+    background: #ff6f61;
+    border: none;
+    padding: 12px;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.email-item {
+    background: #292929;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
