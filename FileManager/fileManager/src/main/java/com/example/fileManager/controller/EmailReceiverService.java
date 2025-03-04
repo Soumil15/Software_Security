@@ -1,10 +1,8 @@
 package com.example.fileManager.controller;
 
 import jakarta.mail.*;
-import jakarta.mail.search.SearchTerm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -12,17 +10,17 @@ import java.util.Properties;
 @Service
 public class EmailReceiverService {
 
-    @Value("${mail.imap.host}")
+    @Value("${spring.mail.imap.host}")
     private String imapHost;
 
-    @Value("${mail.imap.port}")
+    @Value("${spring.mail.imap.port}")
     private int imapPort;
 
-    @Value("${mail.imap.username}")
-    private String imapUsername;
+    @Value("${spring.mail.username}")
+    private String username;
 
-    @Value("${mail.imap.password}")
-    private String imapPassword;
+    @Value("${spring.mail.password}")
+    private String password;
 
     public List<EmailDTO> fetchTodayEmails() {
         List<EmailDTO> emailList = new ArrayList<>();
@@ -41,13 +39,13 @@ public class EmailReceiverService {
             //Create IMAP Session
             Session session = Session.getInstance(properties);
             store = session.getStore("imap");
-            store.connect(imapHost, imapUsername, imapPassword);
+            store.connect(imapHost, username, password);
 
             //Open Inbox
             inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_ONLY);
 
-            //Fetch only the last 20 emails
+            //Fetch the latest 20 emails
             Message[] messages = inbox.getMessages(Math.max(1, inbox.getMessageCount() - 20), inbox.getMessageCount());
 
             for (Message message : messages) {
@@ -87,29 +85,29 @@ public class EmailReceiverService {
     }
 
     private String getTextFromMessage(Message message) throws Exception {
-    if (message.isMimeType("text/plain")) {
-        return message.getContent().toString();
-    } else if (message.isMimeType("text/html")) {
-        return org.jsoup.Jsoup.parse((String) message.getContent()).text();
-    } else if (message.isMimeType("multipart/*")) {
-        return getTextFromMultipart((Multipart) message.getContent());
-    }
-    return "(No content)";
-}
-
-private String getTextFromMultipart(Multipart multipart) throws Exception {
-    StringBuilder result = new StringBuilder();
-
-    for (int i = 0; i < multipart.getCount(); i++) {
-        BodyPart part = multipart.getBodyPart(i);
-        if (part.isMimeType("text/plain")) {
-            result.append(part.getContent().toString()).append("\n");
-        } else if (part.isMimeType("text/html")) {
-            result.append(org.jsoup.Jsoup.parse(part.getContent().toString()).text()).append("\n");
-        } else if (part.getContent() instanceof Multipart) {
-            result.append(getTextFromMultipart((Multipart) part.getContent()));
+        if (message.isMimeType("text/plain")) {
+            return message.getContent().toString();
+        } else if (message.isMimeType("text/html")) {
+            return org.jsoup.Jsoup.parse((String) message.getContent()).text();
+        } else if (message.isMimeType("multipart/*")) {
+            return getTextFromMultipart((Multipart) message.getContent());
         }
+        return "(No content)";
     }
-    return result.toString().trim();
-}
+
+    private String getTextFromMultipart(Multipart multipart) throws Exception {
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < multipart.getCount(); i++) {
+            BodyPart part = multipart.getBodyPart(i);
+            if (part.isMimeType("text/plain")) {
+                result.append(part.getContent().toString()).append("\n");
+            } else if (part.isMimeType("text/html")) {
+                result.append(org.jsoup.Jsoup.parse(part.getContent().toString()).text()).append("\n");
+            } else if (part.getContent() instanceof Multipart) {
+                result.append(getTextFromMultipart((Multipart) part.getContent()));
+            }
+        }
+        return result.toString().trim();
+    }
 }
