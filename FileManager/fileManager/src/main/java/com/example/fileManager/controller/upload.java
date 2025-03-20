@@ -19,7 +19,7 @@ import java.util.Base64;
 public class upload {
 
     // NOTE !!! : UPLOAD_DIR should be the same for both the upload and download endpoint.
-    private static final String UPLOAD_DIR = "C:/Users/paras/Desktop/Software_Security/upload/"; // PLEASE ADD THE DIRECTORY OF YOUR CHOICE
+    private static final String UPLOAD_DIR = ""; // PLEASE ADD THE DIRECTORY OF YOUR CHOICE
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {

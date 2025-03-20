@@ -26,7 +26,7 @@ public class download {
     private final List<String> privateDocs =  new ArrayList<>();
 
     // NOTE !!! : UPLOAD_DIR should be the same for both the upload and download endpoint.
-    private static final String UPLOAD_DIR = "C:/Users/paras/Desktop/Software_Security/upload/"; // PLEASE ADD THE DIRECTORY OF YOUR CHOICE
+    private static final String UPLOAD_DIR = ""; // PLEASE ADD THE DIRECTORY OF YOUR CHOICE
 
     @GetMapping("/downloads")
     public ResponseEntity<byte[]> downloadFile(@RequestParam("filename") String fileName, HttpSession session){
