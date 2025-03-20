@@ -26,7 +26,7 @@ public class download {
     private final List<String> privateDocs =  new ArrayList<>();
 
     // NOTE !!! : UPLOAD_DIR should be the same for both the upload and download endpoint.
-    private static final String UPLOAD_DIR = ""; // PLEASE ADD THE DIRECTORY OF YOUR CHOICE
+    private static final String UPLOAD_DIR = "C:/Users/paras/Desktop/Software_Security/upload/"; // PLEASE ADD THE DIRECTORY OF YOUR CHOICE
 
     @GetMapping("/downloads")
     public ResponseEntity<byte[]> downloadFile(@RequestParam("filename") String fileName, HttpSession session){
@@ -34,6 +34,7 @@ public class download {
         DBHelper dbHelper = new DBHelper();
         // Set of documents allowed for users with "Admin" role:
         privateDocs.add("NBA_test_predictions_2007.xlsx");
+        privateDocs.add("test.txt");
 
         // All the other users with "regular" role won't be allowed to download these docs
 
@@ -48,6 +49,7 @@ public class download {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body("Access denied: you don't have the right permission".getBytes(StandardCharsets.UTF_8));
             }
+        
 
 
         }

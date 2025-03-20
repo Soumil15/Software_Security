@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./EmailInbox.css";
+import "../styles/EmailInbox.css";
 
 const EmailInbox = () => {
     const [emails, setEmails] = useState([]);

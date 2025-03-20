@@ -1,0 +1,118 @@
+/* General Styling */
+body {
+    background-color: #0d0d0d;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Centered SignUp Container */
+.signup-container {
+    width: 380px;
+    /* Slightly wider for better alignment */
+    background-color: #111;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #8B0000;
+    box-shadow: 0px 0px 15px rgba(139, 0, 0, 0.5);
+    text-align: center;
+}
+
+/* Form Title */
+.signup-form h2 {
+    color: #B22222;
+    font-size: 26px;
+    margin-bottom: 20px;
+}
+
+/* Labels */
+.signup-form label {
+    display: block;
+    text-align: left;
+    color: #B22222;
+    font-size: 14px;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+/* Input Fields */
+.signup-form input {
+    width: 100%;
+    /* Ensures all inputs are same width */
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #8B0000;
+    background-color: #222;
+    color: white;
+    border-radius: 6px;
+    transition: all 0.3s ease-in-out;
+    box-sizing: border-box;
+    /* Prevents padding from affecting width */
+}
+
+/* Placeholder Styling */
+.signup-form input::placeholder {
+    color: #999;
+    font-size: 14px;
+}
+
+/* Input Focus Effect */
+.signup-form input:focus {
+    outline: none;
+    border-color: #B22222;
+    box-shadow: 0px 0px 8px rgba(178, 34, 34, 0.6);
+}
+
+/* Submit Button */
+.signup-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #B22222;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    margin-top: 10px;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+/* Button Hover Effect */
+.signup-button:hover {
+    background-color: #a41e1e;
+    transform: scale(1.05);
+}
+
+/* Terms & Conditions */
+.terms {
+    font-size: 12px;
+    color: #bbb;
+    margin-top: 15px;
+}
+
+.highlight {
+    color: #B22222;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Login Text */
+.login-text {
+    font-size: 12px;
+    margin-top: 10px;
+    color: #bbb;
+}
+
+.login-link {
+    color: #B22222;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}

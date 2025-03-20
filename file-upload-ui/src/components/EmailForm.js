@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./EmailForm.css";
+import "../styles/EmailForm.css";
 
 const EmailForm = () => {
     const [formData, setFormData] = useState({

@@ -1,0 +1,113 @@
+/* General Styling */
+body {
+    background-color: #0d0d0d;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Centered Login Container */
+.login-container {
+    width: 380px;
+    /* Same width as signup for consistency */
+    background-color: #111;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #8B0000;
+    box-shadow: 0px 0px 15px rgba(139, 0, 0, 0.5);
+    text-align: center;
+}
+
+/* Form Title */
+.login-form h2 {
+    color: #B22222;
+    font-size: 26px;
+    margin-bottom: 20px;
+}
+
+/* Labels */
+.login-form label {
+    display: block;
+    text-align: left;
+    color: #B22222;
+    font-size: 14px;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+/* Input Fields */
+.login-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #8B0000;
+    background-color: #222;
+    color: white;
+    border-radius: 6px;
+    transition: all 0.3s ease-in-out;
+    box-sizing: border-box;
+}
+
+/* Placeholder Styling */
+.login-form input::placeholder {
+    color: #999;
+    font-size: 14px;
+}
+
+/* Input Focus Effect */
+.login-form input:focus {
+    outline: none;
+    border-color: #B22222;
+    box-shadow: 0px 0px 8px rgba(178, 34, 34, 0.6);
+}
+
+/* Login Button */
+.login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #B22222;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    margin-top: 10px;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+/* Button Hover Effect */
+.login-button:hover {
+    background-color: #a41e1e;
+    transform: scale(1.05);
+}
+
+/* Error Message Styling */
+.error-text,
+.server-error {
+    font-size: 12px;
+    color: #ff4d4d;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+/* Signup Redirect */
+.login-text {
+    font-size: 12px;
+    margin-top: 10px;
+    color: #bbb;
+}
+
+.signup-link {
+    color: #B22222;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}

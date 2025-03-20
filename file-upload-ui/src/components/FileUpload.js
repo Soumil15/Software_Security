@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
-import { FaFilePdf, FaFileExcel, FaFileImage, FaFileWord, FaFileAlt, FaTimes, FaCheck, FaCloudUploadAlt, FaDownload } from "react-icons/fa";
-import "./FileUpload.css";
+import { FaFilePdf, FaFileExcel, FaFileImage, FaFileWord, FaFileAlt, FaTimes, FaCheck, FaCloudUploadAlt, FaDownload, FaEnvelope } from "react-icons/fa";
+import "../styles/FileUpload.css";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const getFileIcon = (fileName) => {
     const extension = fileName.split(".").pop().toLowerCase();
@@ -54,6 +55,7 @@ const FileUpload = () => {
             const response = await axios.get(`http://localhost:8080/api/downloads`, {
                 params: { filename: searchQuery.trim() },
                 responseType: "blob",
+                withCredentials: true
             });
 
             const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -66,6 +68,18 @@ const FileUpload = () => {
 
             setDownloadStatus("success");
         } catch (error) {
+            if (error.response) {
+                if (error.response.status === 403) {
+                    alert("Access Denied! You don't have permission to download this file.");
+                } else if (error.response.status === 404) {
+                    alert(`File not found: ${searchQuery}`);
+                } else {
+                    alert(`Download failed: ${error.response.data || "Unknown error"}`);
+                }
+            } else {
+                alert("Network error or server is down.");
+            }
+
             console.error("Download error:", error);
             setDownloadStatus("not_found");
         }
@@ -74,6 +88,7 @@ const FileUpload = () => {
 
 
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
+    const navigate = useNavigate();
 
     return (
         <div className="app-container dark-theme">
@@ -83,6 +98,10 @@ const FileUpload = () => {
                 </button>
                 <button className={`nav-btn ${activeTab === "download" ? "active" : ""}`} onClick={() => setActiveTab("download")}>
                     <FaDownload /> Download
+                </button>
+
+                <button className="nav-btn" onClick={() => navigate("/email")}>
+                    <FaEnvelope /> Email
                 </button>
             </nav>
 
