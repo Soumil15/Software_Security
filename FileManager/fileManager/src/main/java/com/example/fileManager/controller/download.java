@@ -1,6 +1,7 @@
 package com.example.fileManager.controller;
 
 import com.example.fileManager.Helper.DBHelper;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,25 +12,47 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000/")
 public class download {
 
+    private final List<String> privateDocs =  new ArrayList<>();
+
     // NOTE !!! : UPLOAD_DIR should be the same for both the upload and download endpoint.
     private static final String UPLOAD_DIR = ""; // PLEASE ADD THE DIRECTORY OF YOUR CHOICE
 
     @GetMapping("/downloads")
-    public ResponseEntity<byte[]> downloadFile(@RequestParam("filename") String fileName){
+    public ResponseEntity<byte[]> downloadFile(@RequestParam("filename") String fileName, HttpSession session){
+
+        DBHelper dbHelper = new DBHelper();
+        // Set of documents allowed for users with "Admin" role:
+        privateDocs.add("NBA_test_predictions_2007.xlsx");
+
+        // All the other users with "regular" role won't be allowed to download these docs
 
         System.out.println("Download request received for: " + fileName);
 
+        String requestedUser = (String) session.getAttribute("username");
+        System.out.println(requestedUser);
 
-        //First check if the file exists
-        DBHelper dbHelper = new DBHelper();
+        if(dbHelper.CheckUserRole(requestedUser).equals("Regular")){
+
+            if(privateDocs.contains(fileName)){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body("Access denied: you don't have the right permission".getBytes(StandardCharsets.UTF_8));
+            }
+
+
+        }
+
+
         boolean check = dbHelper.checkIfFileExists(fileName);
 
         if(!check){
@@ -39,10 +62,9 @@ public class download {
         }
         try{
             String retrievedKey = dbHelper.retrieveKey(fileName);
-            //The AES stored in the db as Base64 encoded. So it needs to be decoded
+
             byte[] aesKey = Base64.getDecoder().decode(retrievedKey);
 
-            // Read the encrypted file from the server's designated folder
             File encryptedFile = new File(UPLOAD_DIR + "/" + fileName + ".enc");
             if (!encryptedFile.exists()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -78,5 +100,6 @@ public class download {
 
         return cipher.doFinal(encryptedData); // Pass the encrypted file data here
     }
+
 
 }

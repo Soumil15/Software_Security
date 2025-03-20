@@ -10,7 +10,7 @@ public class HelloController {
 
     @GetMapping("/hello")
     public String sayHello() {
-        return "Spring Boot Auto-Build Works!";
+        return "Spring Boot Auto-Build Works !!!";
 
     }
 }
