@@ -32,7 +32,7 @@ public class EmailController {
         }
     }
 
-    //Fetch today's emails
+    // Fetch today's emails
     @GetMapping("/fetchInboxToday")
     public ResponseEntity<List<EmailDTO>> fetchTodayEmails() {
         List<EmailDTO> emails = emailReceiverService.fetchTodayEmails();

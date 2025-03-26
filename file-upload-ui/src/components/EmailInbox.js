@@ -12,11 +12,17 @@ const EmailInbox = () => {
         setError("");
 
         try {
-            const response = await axios.get("http://localhost:8080/email/fetchInboxToday");
+            const response = await axios.get("http://localhost:8080/email/fetchInboxToday", {
+                withCredentials: true, // ✅ Ensure cookies or authentication is sent
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`, // ✅ If using JWT
+                    "Content-Type": "application/json"
+                }
+            });
             setEmails(response.data);
         } catch (error) {
             console.error("Error fetching emails:", error);
-            setError("Failed to fetch emails. Please try again.");
+            setError("Failed to fetch emails. Please check your network and authentication settings.");
         } finally {
             setLoading(false);
         }

@@ -10,6 +10,8 @@ const EmailForm = () => {
         file: null
     });
 
+    const [fileInputKey, setFileInputKey] = useState(Date.now());
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -30,11 +32,27 @@ const EmailForm = () => {
         }
 
         try {
-            const response = await axios.post("http://localhost:8080/email/sendWithAttachment", data);
+            const response = await axios.post("http://localhost:8080/email/sendWithAttachment", data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                withCredentials: true
+            });
+
             alert(response.data);
+
+            // ✅ Clear the form after success
+            setFormData({
+                to: "",
+                subject: "",
+                body: "",
+                file: null
+            });
+            setFileInputKey(Date.now()); // force file input reset
+
         } catch (error) {
             console.error("Error sending email:", error);
-            alert("Failed to send email.");
+            alert("Failed to send email. Please check server logs.");
         }
     };
 
@@ -42,10 +60,34 @@ const EmailForm = () => {
         <div className="email-form">
             <h2>📨 Send Email</h2>
             <form onSubmit={handleSubmit}>
-                <input type="email" name="to" placeholder="Recipient Email" onChange={handleChange} required />
-                <input type="text" name="subject" placeholder="Subject" onChange={handleChange} required />
-                <textarea name="body" placeholder="Message" onChange={handleChange} required></textarea>
-                <input type="file" onChange={handleFileChange} />
+                <input
+                    type="email"
+                    name="to"
+                    placeholder="Recipient Email"
+                    value={formData.to}
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="text"
+                    name="subject"
+                    placeholder="Subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                />
+                <textarea
+                    name="body"
+                    placeholder="Message"
+                    value={formData.body}
+                    onChange={handleChange}
+                    required
+                ></textarea>
+                <input
+                    type="file"
+                    key={fileInputKey}
+                    onChange={handleFileChange}
+                />
                 <button type="submit">Send Email</button>
             </form>
         </div>

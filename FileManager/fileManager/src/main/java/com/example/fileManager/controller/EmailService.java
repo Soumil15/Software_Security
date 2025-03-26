@@ -39,29 +39,36 @@ public class EmailService {
             }
         });
 
-        Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(smtpUsername));
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-        message.setSubject(subject);
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(smtpUsername));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            message.setSubject(subject);
 
-        Multipart multipart = new MimeMultipart();
+            Multipart multipart = new MimeMultipart();
 
-        //Add email body
-        MimeBodyPart textBodyPart = new MimeBodyPart();
-        textBodyPart.setText(body);
-        multipart.addBodyPart(textBodyPart);
+            // Add email body
+            MimeBodyPart textBodyPart = new MimeBodyPart();
+            textBodyPart.setText(body);
+            multipart.addBodyPart(textBodyPart);
 
-        //If file exists, add as an attachment
-        if (file != null && !file.isEmpty()) {
-            MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-            File tempFile = convertMultiPartToFile(file);
-            attachmentBodyPart.attachFile(tempFile);
-            attachmentBodyPart.setFileName(file.getOriginalFilename());
-            multipart.addBodyPart(attachmentBodyPart);
+            // If file exists, add as an attachment
+            if (file != null && !file.isEmpty()) {
+                MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+                File tempFile = convertMultiPartToFile(file);
+                attachmentBodyPart.attachFile(tempFile);
+                attachmentBodyPart.setFileName(file.getOriginalFilename());
+                multipart.addBodyPart(attachmentBodyPart);
+            }
+
+            message.setContent(multipart);
+            Transport.send(message);
+            System.out.println("✅ Email sent successfully to " + to);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to send email: " + e.getMessage());
         }
-
-        message.setContent(multipart);
-        Transport.send(message);
     }
 
     private File convertMultiPartToFile(MultipartFile file) throws Exception {

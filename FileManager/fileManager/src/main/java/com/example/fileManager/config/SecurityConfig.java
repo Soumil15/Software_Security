@@ -21,7 +21,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Enable CORS
                 .csrf(csrf -> csrf.disable()) // ✅ Disable CSRF (important for session-based auth)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/signup", "/api/login", "/api/upload", "/api/downloads").permitAll()
+                        .requestMatchers("/api/signup", "/api/login", "/api/upload", "/api/downloads", "/email/fetchInboxToday", "/email/sendWithAttachment").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())

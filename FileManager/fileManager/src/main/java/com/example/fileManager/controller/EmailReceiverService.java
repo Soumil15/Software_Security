@@ -1,8 +1,10 @@
 package com.example.fileManager.controller;
 
 import jakarta.mail.*;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -28,7 +30,7 @@ public class EmailReceiverService {
         Folder inbox = null;
 
         try {
-            //IMAP Configuration
+            // IMAP Configuration
             Properties properties = new Properties();
             properties.put("mail.store.protocol", "imap");
             properties.put("mail.imap.host", imapHost);
@@ -36,28 +38,29 @@ public class EmailReceiverService {
             properties.put("mail.imap.auth", "true");
             properties.put("mail.imap.ssl.enable", "true");
 
-            //Create IMAP Session
+            // Create IMAP Session
             Session session = Session.getInstance(properties);
             store = session.getStore("imap");
             store.connect(imapHost, username, password);
 
-            //Open Inbox
+            // Open Inbox
             inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_ONLY);
 
-            //Fetch the latest 20 emails
+            // Fetch the latest 20 emails
             Message[] messages = inbox.getMessages(Math.max(1, inbox.getMessageCount() - 20), inbox.getMessageCount());
 
-            for (Message message : messages) {
-                if (isEmailFromToday(message)) {
-                    emailList.add(new EmailDTO(
-                            message.getSubject(),
-                            message.getFrom()[0].toString(),
-                            message.getSentDate(),
-                            getTextFromMessage(message)
-                    ));
-                }
-            }
+            for (int i = messages.length - 1; i >= 0; i--) {
+    Message message = messages[i];
+    if (isEmailFromToday(message)) {
+        emailList.add(new EmailDTO(
+            message.getSubject(),
+            message.getFrom()[0].toString(),
+            message.getSentDate(),
+            getTextFromMessage(message)
+        ));
+    }
+}
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,15 +88,16 @@ public class EmailReceiverService {
     }
 
     private String getTextFromMessage(Message message) throws Exception {
-        if (message.isMimeType("text/plain")) {
-            return message.getContent().toString();
-        } else if (message.isMimeType("text/html")) {
-            return org.jsoup.Jsoup.parse((String) message.getContent()).text();
-        } else if (message.isMimeType("multipart/*")) {
-            return getTextFromMultipart((Multipart) message.getContent());
-        }
-        return "(No content)";
+    if (message.isMimeType("text/plain")) {
+        return message.getContent().toString();
+    } else if (message.isMimeType("text/html")) {
+        return Jsoup.parse(message.getContent().toString()).text();
+    } else if (message.isMimeType("multipart/*")) {
+        return getTextFromMultipart((Multipart) message.getContent());
     }
+    return "No readable content";
+}
+
 
     private String getTextFromMultipart(Multipart multipart) throws Exception {
         StringBuilder result = new StringBuilder();
@@ -103,7 +107,7 @@ public class EmailReceiverService {
             if (part.isMimeType("text/plain")) {
                 result.append(part.getContent().toString()).append("\n");
             } else if (part.isMimeType("text/html")) {
-                result.append(org.jsoup.Jsoup.parse(part.getContent().toString()).text()).append("\n");
+                result.append(Jsoup.parse(part.getContent().toString()).text()).append("\n");
             } else if (part.getContent() instanceof Multipart) {
                 result.append(getTextFromMultipart((Multipart) part.getContent()));
             }
