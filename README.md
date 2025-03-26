@@ -13,28 +13,7 @@ The project is divided into two main folders:
 
 ---
 
-## Table of Contents
 
-- [Overview](#overview)
-  - [Key Features](#key-features)
-  - [Architecture](#architecture)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Getting Started](#getting-started)
-  - [Backend Setup](#backend-setup)
-  - [Frontend Setup](#frontend-setup)
-- [Usage](#usage)
-  - [1. Account Creation and Login](#1-account-creation-and-login)
-  - [2. File Upload](#2-file-upload)
-  - [3. File Download](#3-file-download)
-  - [4. Sending Emails](#4-sending-emails)
-  - [5. Receiving Emails](#5-receiving-emails)
-- [Security Highlights](#security-highlights)
-- [Project Structure](#project-structure)
-- [Contributors & Roles](#contributors--roles)
-- [License](#license)
-
----
 
 ## Overview
 
